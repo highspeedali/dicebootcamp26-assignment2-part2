@@ -1,0 +1,38 @@
+# Commented the version as its deprecated. Was also giving warnings during execution.
+#version: '3.9'
+
+services:
+  web:
+    build: ./web
+    image: web:latest
+#    container_name: web
+    ports:
+      - "8080"
+    networks:
+      - my_network
+    depends_on:
+      - database
+
+  database:
+    build: ./db
+    image: database:latest
+    container_name: database
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: dbpassword
+    ports:
+      - "3306:3306"
+    networks:
+      - my_network
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+
+networks:
+  my_network:
+    driver: bridge
